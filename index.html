@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estate No. 4 | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f0f; color: #e5e5e5; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-text { color: #c5a059; }
+        .gold-bg { background-color: #c5a059; }
+        .gold-border { border-color: rgba(197, 160, 89, 0.3); }
+        .step-hidden { display: none; }
+        input, select { background: #1a1a1a; border: 1px solid rgba(197, 160, 89, 0.3); color: white; padding: 12px; border-radius: 4px; outline: none; }
+        input:focus { border-color: #c5a059; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(197, 160, 89, 0.1); }
+    
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f0f0f;
+            color: #e5e5e5;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        @keyframes slow-zoom {
+            0% { transform: scale(1.05); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1.05); }
+        }
+        .animate-slow-zoom {
+            animation: slow-zoom 20s ease-in-out infinite;
+        }
+        .gold-text {
+            color: #c5a059;
+        }
+        .gold-bg {
+            background-color: #c5a059;
+        }
+        .gold-border {
+            border-color: rgba(197, 160, 89, 0.3);
+        }
+        .glass-nav {
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="selection:bg-[#c5a059] selection:text-black">
+
+    <!-- Atas -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-700 py-8">
+        <div class="max-w-7xl mx-auto px-8 flex justify-between items-center">
+            <img src="gambar.png" alt="logo" class="w-24 h-13">
+
+            <!--Atas kanan -->
+            <div class="hidden lg:flex items-center space-x-12 text-[11px] tracking-[0.3em] uppercase">
+                <a href="#philosophy" class="hover:text-[#c5a059] transition-colors border-b border-transparent hover:border-[#c5a059] pb-1">Philosophy</a>
+                <a href="#menu" class="hover:text-[#c5a059] transition-colors border-b border-transparent hover:border-[#c5a059] pb-1">The Menu</a>
+                <a href="#contact" class="hover:text-[#c5a059] transition-colors border-b border-transparent hover:border-[#c5a059] pb-1">Location</a>
+                <button class="gold-bg text-black px-8 py-3 font-bold hover:bg-[#d4b47a] transition-all tracking-widest">
+                    <a href="order.html">ORDER</a>
+                </button>
+            </div>
+
+            <!-- hp -->
+            <button class="lg:hidden gold-text" onclick="toggleMenu()">
+                <i data-lucide="menu" id="menu-icon" class="w-8 h-8"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- overlay menu hp -->
+    <div id="mobile-menu" class="fixed inset-0 z-[100] bg-black hidden flex-col items-center justify-center space-y-12 transition-all duration-500">
+        <button onclick="toggleMenu()" class="absolute top-10 right-10 gold-text">
+            <i data-lucide="x" class="w-10 h-10"></i>
+        </button>
+        <a href="#" onclick="toggleMenu()" class="text-4xl font-light tracking-widest gold-text font-serif">HOME</a>
+        <a href="#menu" onclick="toggleMenu()" class="text-4xl font-light tracking-widest font-serif">MENU</a>
+        <a href="#contact" onclick="toggleMenu()" class="text-4xl font-light tracking-widest font-serif">CONTACT</a>
+        <button class="gold-bg text-black px-12 py-4 font-bold tracking-widest"><a href="order.html">RESERVATION</a>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black z-10"></div>
+            <div class="w-full h-full bg-[url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070')] bg-cover bg-center scale-105 animate-slow-zoom"></div>
+        </div>
+
+        <div class="relative z-20 text-center px-4 max-w-4xl">
+            <div class="mb-6 flex justify-center items-center space-x-4 opacity-80">
+            </div>
+            <h1 class="text-6xl md:text-9xl font-light tracking-tight text-white mb-8 leading-none font-serif">
+                Exquisite<br/>
+                <span class="italic">Taste</span>
+            </h1>
+            <p class="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+                Step into a world of timeless luxury. Where artisan mocktails meet the golden age of jazz and impeccable service.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button class="w-full sm:w-auto border border-[#c5a059] gold-text px-12 py-4 text-sm tracking-[0.3em] uppercase hover:bg-[#c5a059] hover:text-black transition-all duration-500">
+                    Explore The Bar
+                </button>
+                <button class="w-full sm:w-auto gold-bg text-black px-12 py-4 text-sm tracking-[0.3em] uppercase font-bold hover:bg-[#d4b47a] transition-all duration-500">
+                    <a href="order.html">Book a Drink</a>
+                </button>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- philosophy -->
+    <section id="philosophy" class="py-32 px-6 bg-black relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                <div class="relative group">
+                    <div class="absolute -inset-4 border gold-border group-hover:border-[#c5a059]/40 transition-all duration-700"></div>
+                    <img src="https://images.unsplash.com/photo-1544145945-f904253d0c7b?auto=format&fit=crop&q=80&w=1887" alt="Craft Cocktails" class="relative z-10 grayscale hover:grayscale-0 transition-all duration-1000">
+                </div>
+                <div class="space-y-8">
+                    <h2 class="gold-text uppercase tracking-[0.5em] text-xs">Our Heritage</h2>
+                    <h3 class="text-4xl md:text-6xl font-light leading-tight font-serif text-white">A Journey Back to <br>The Timeless Masterpiece</h3>
+                    <p class="text-white/60 font-light leading-loose text-lg">True elegance fits in the palm of your hand. We deliver a masterpiece of flavor, proving that classic luxury can be a modern experience.
+                    <button class="flex items-center space-x-4 gold-text group">
+                        <span class="uppercase tracking-[0.3em] text-xs font-bold border-b border-[#c5a059]">Learn Our Story</span>
+                        <i data-lucide="chevron-right" class="w-4 h-8 group-hover:translate-x-2 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- menu highlight -->
+    <section id="menu" class="py-32 bg-[#0a0a0a] border-y gold-border">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="gold-text uppercase tracking-[0.5em] text-xs mb-6">Curated Selection</h2>
+            <h3 class="text-5xl font-light font-serif mb-24 text-white">Taste the Exclusivity</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- signature mocktail -->
+                <div class="group relative bg-black/40 border gold-border p-12 text-center hover:border-[#c5a059]/60 transition-all duration-500">
+                    <div class="inline-flex p-6 rounded-full border gold-border mb-8 gold-text group-hover:bg-[#c5a059] group-hover:text-black transition-all duration-500">
+                        <i data-lucide="wine" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-2xl mb-4 group-hover:gold-text transition-colors font-serif">Signature Mocktail</h4>
+                    <p class="text-white/40 font-light text-sm mb-8">Our signature sparkling lemon blend, finished with a crisp hint of fresh mint.</p>
+                    <div class="w-12 h-[1px] bg-[#c5a059]/30 mx-auto"></div>
+                </div>
+
+                <!-- mocktails -->
+                <div class="group relative bg-black/40 border gold-border p-12 text-center hover:border-[#c5a059]/60 transition-all duration-500">
+                    <div class="inline-flex p-6 rounded-full border gold-border mb-8 gold-text group-hover:bg-[#c5a059] group-hover:text-black transition-all duration-500">
+                        <i data-lucide="utensils" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-2xl mb-4 group-hover:gold-text transition-colors font-serif"><a href="menuview.html">The Estate Collection</a></h4>
+                    <p class="text-white/40 font-light text-sm mb-8">A curated menu of timeless refreshment. Precision-built for the perfect balance of flavor, aroma, and aesthetic charm.</p>
+                    <div class="w-12 h-[1px] bg-[#c5a059]/30 mx-auto"></div>
+                </div>
+
+                <!-- preorder -->
+                <div class="group relative bg-black/40 border gold-border p-12 text-center hover:border-[#c5a059]/60 transition-all duration-500">
+                    <div class="inline-flex p-6 rounded-full border gold-border mb-8 gold-text group-hover:bg-[#c5a059] group-hover:text-black transition-all duration-500">
+                        <i data-lucide="star" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-2xl mb-4 group-hover:gold-text transition-colors font-serif">Reservations</h4>
+                    <p class="text-white/40 font-light text-sm mb-8">Secure your pour in advance. We limit daily batches to guarantee peak quality and perfect carbonation upon your arrival.</p>
+                    <div class="w-12 h-[1px] bg-[#c5a059]/30 mx-auto"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- lokasi mas -->
+    <section id="contact" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto bg-[#141414] border gold-border">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <div class="p-12 md:p-20 space-y-12">
+                    <div>
+                        <h2 class="gold-text uppercase tracking-[0.5em] text-xs mb-4">Visit Us</h2>
+                        <h3 class="text-4xl font-light mb-8 font-serif text-white">Institut Sains dan Teknologi Terpadu Surabaya</h3>
+                        <div class="space-y-6 font-light text-white/70">
+                            <div class="flex items-start">
+                                <i data-lucide="map-pin" class="gold-text mr-4 shrink-0 w-6 h-6"></i>
+                                <span>Jl. Ngagel Jaya Tengah 73 - 77, Surabaya, Indonesia</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i data-lucide="phone" class="gold-text mr-4 shrink-0 w-6 h-6"></i>
+                                <span>+62 89 8072 0427</span>
+                            </div>
+                            <div class="flex items-start">
+                                <i data-lucide="clock" class="gold-text mr-4 shrink-0 w-6 h-6"></i>
+                                <div>
+                                    <p>Monday: 10:30 - 01:00</p>
+                                    <p>Wednesday: 10:30 - 04:00</p>
+                                    <p class="gold-text opacity-60">Tue, Thu - Sun: Closed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-8 flex space-x-6 border-t border-white/5 text-white/40">
+                        <a href="#" class="hover:gold-text transition-colors"><i data-lucide="instagram"></i></a>
+                    </div>
+                </div>
+                <div class="h-[400px] lg:h-auto bg-[url('https://images.unsplash.com/photo-1485872299829-c673f5194813?auto=format&fit=crop&q=80&w=1760')] bg-cover bg-center grayscale contrast-125"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="py-20 border-t gold-border bg-black text-center">
+        <div class="max-w-7xl mx-auto px-6 space-y-8">
+            <span class="text-4xl font-light tracking-[0.3em] gold-text font-serif">Estate No.4</span>
+             <span class="flex flex-wrap justify-center gap-10 text-[10px] tracking-[0.3em] uppercase text-white/60 mb-12">Classic taste, everyday pace.</span>
+             <div class="pt-1">
+                <a href="admin.html" class="text-[10px] tracking-[0.4em] uppercase opacity-30 hover:opacity-100 transition-opacity border gold-border px-6 py-2 rounded">
+                    Admin Login
+                </a>
+            </div>
+            <p class="text-white/20 text-[10px] tracking-widest uppercase">© 2026 Estate No.4. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('glass-nav', 'py-4', 'border-b', 'gold-border', 'shadow-2xl');
+                navbar.classList.remove('py-8');
+            } else {
+                navbar.classList.remove('glass-nav', 'py-4', 'border-b', 'gold-border', 'shadow-2xl');
+                navbar.classList.add('py-8');
+            }
+        });
+
+        const mobileMenu = document.getElementById('mobile-menu');
+        function toggleMenu() {
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.classList.add('flex');
+            } else {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            }
+        }
+
+    </script>
+</body>
+</html>

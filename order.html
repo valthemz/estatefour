@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order | Estate No. 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f0f; color: #e5e5e5; display: flex; flex-direction: column; min-height: 100vh; }
+        main { flex: 1; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-text { color: #c5a059; }
+        .gold-bg { background-color: #c5a059; }
+        .gold-border { border-color: rgba(197, 160, 89, 0.3); }
+        .step-hidden { display: none !important; }
+        input, select { background: #1a1a1a; border: 1px solid rgba(197, 160, 89, 0.3); color: white; padding: 12px; border-radius: 4px; outline: none; width: 100%; }
+        input:focus { border-color: #c5a059; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(197, 160, 89, 0.1); }
+        .btn-active { background-color: #c5a059 !important; color: black !important; font-weight: bold !important; }
+        .sold-out { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
+        
+        /* Gaya Struk */
+        .receipt-paper {
+            background: #fefefe;
+            color: #333;
+            padding: 30px;
+            border-radius: 2px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .receipt-paper::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(-45deg, transparent 5px, #fefefe 5px), linear-gradient(45deg, transparent 5px, #fefefe 5px);
+            background-size: 10px 10px;
+        }
+    </style>
+</head>
+<body class="bg-[#0f0f0f]">
+
+    <!-- Navigasi Atas -->
+    <nav class="py-8 px-8 flex justify-between items-center border-b gold-border sticky top-0 bg-[#0f0f0f] z-50 backdrop-blur-md">
+        <a href="index.html" class="flex items-center space-x-2 text-xs uppercase opacity-60 hover:opacity-100 transition-opacity">
+            <i data-lucide="arrow-left" class="w-4 h-4 gold-text"></i> Back To Home
+        </a>
+        <span class="text-2xl font-light gold-text font-serif">Estate No. 4</span>
+        <div class="relative cursor-pointer" onclick="goToStep(3)">
+            <i data-lucide="shopping-cart" class="gold-text w-6 h-6"></i>
+            <span id="cart-count" class="absolute -top-2 -right-2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 py-12 w-full">
+        
+        <!-- LANGKAH 1: IDENTITAS & METODE -->
+        <section id="step-1" class="space-y-8 animate-in fade-in duration-700">
+            <h2 class="text-4xl font-serif gold-text text-center italic font-light tracking-tight">Start Your Order</h2>
+            <div class="glass-card p-8 rounded-2xl space-y-6">
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Your Name</label>
+                    <input type="text" id="cust-name" placeholder="">
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">WhatsApp (we will inform your order through Whatsapp)</label>
+                    <input type="tel" id="cust-phone" placeholder=" gunakan kode negara, misal 62...">
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Select Method</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button" onclick="selectMethod('takeaway')" id="btn-takeaway" class="py-4 border gold-border rounded-lg transition-all hover:bg-white/5">Take Away</button>
+                        <button type="button" onclick="selectMethod('preorder')" id="btn-preorder" class="py-4 border gold-border rounded-lg transition-all hover:bg-white/5">Pre-Order</button>
+                    </div>
+                </div>
+                
+                <div id="preorder-fields" class="hidden grid grid-cols-2 gap-4 pt-4 border-t gold-border animate-in slide-in-from-top">
+                    <div>
+                        <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Pick Up Date</label>
+                        <input type="date" id="res-date">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Pick Up Time</label>
+                        <input type="time" id="res-time">
+                    </div>
+                </div>
+
+                <button type="button" onclick="validateStep1()" class="w-full gold-bg text-black font-bold py-4 rounded-lg tracking-widest uppercase mt-4 hover:scale-[1.01] transition-transform">Browse Menu</button>
+            </div>
+        </section>
+
+        <!-- LANGKAH 2: MENU -->
+        <section id="step-2" class="step-hidden space-y-12 animate-in fade-in duration-700">
+            <div class="text-center">
+                <h2 class="text-4xl font-serif gold-text italic">The Collection</h2>
+                <p class="text-sm opacity-50 mt-2 italic">Precision-built for the perfect balance</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Amber Note -->
+                <div id="card-amber" class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="amber.jpg" 
+                         onclick="openDetail('Amber Note', 'Premium lemon, crisp soda, and fresh mint over ice. A classic, sparkling masterpiece.', amber.jpg, 'amber')"
+                         class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <div class="p-6 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-serif">Amber Note</h4>
+                            <span class="stock-label text-[9px] opacity-40 uppercase tracking-widest">Stock: --</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <button onclick="toggleLike(this)" class="text-white/40 hover:text-red-500 transition-colors"><i data-lucide="heart"></i></button>
+                            <button id="add-amber" onclick="addToCart('Amber Note', 10000, 'amber')" class="gold-text text-xs font-bold border-b gold-border">ADD TO CART</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Velvet Note -->
+                <div id="card-velvet" class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="velvet.jpg"
+                    onclick="openDetail('Velvet Note', 'Luscious strawberry, crisp soda, and fresh garnishes over ice. Smooth, vibrant, and elegantly sweet.', velvet.jpg, 'velvet')"
+                         class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <div class="p-6 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-serif">Velvet Note</h4>
+                            <span class="stock-label text-[9px] opacity-40 uppercase tracking-widest">Stock: --</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <button onclick="toggleLike(this)" class="text-white/40 hover:text-red-500 transition-colors"><i data-lucide="heart"></i></button>
+                            <button id="add-velvet" onclick="addToCart('Velvet Note', 10000, 'velvet')" class="gold-text text-xs font-bold border-b gold-border">ADD TO CART</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Marine Note -->
+                <div id="card-midnight" class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="marine.jpg" 
+                         onclick="openDetail('Marine Note', 'Vibrant blue citrus, crisp soda, and a touch of fresh lime over ice. Bold, beautiful, and deeply refreshing.', m, 'midnight')"
+                         class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <div class="p-6 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-serif">Marine Note</h4>
+                            <span class="stock-label text-[9px] opacity-40 uppercase tracking-widest">Stock: --</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <button onclick="toggleLike(this)" class="text-white/40 hover:text-red-500 transition-colors"><i data-lucide="heart"></i></button>
+                            <button id="add-midnight" onclick="addToCart('Marine Note', 10000, 'Vibrant blue citrus, crisp soda, and a touch of fresh lime over ice. Bold, beautiful, and deeply refreshing.')" class="gold-text text-xs font-bold border-b gold-border">ADD TO CART</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="goToStep(3)" class="w-full gold-bg text-black font-bold py-4 rounded-lg tracking-widest uppercase mt-8">Review Order</button>
+        </section>
+
+        <!-- LANGKAH 3: CHECKOUT -->
+        <section id="step-3" class="step-hidden space-y-8 animate-in fade-in duration-700">
+            <h2 class="text-3xl font-serif gold-text text-center italic">Order Summary</h2>
+            <div class="glass-card p-8 rounded-2xl border gold-border">
+                <div id="cart-list" class="space-y-4 mb-8"></div>
+                <div class="border-t gold-border pt-4 flex justify-between items-center mb-8">
+                    <span class="uppercase tracking-widest text-xs opacity-60">Total</span>
+                    <span id="total-price-display" class="text-xl font-bold gold-text">Rp 0</span>
+                </div>
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 gap-4">
+                        <button id="pay-cash" onclick="selectPayment('cash')" class="py-4 border gold-border rounded-lg text-left px-6 flex justify-between items-center transition-all hover:bg-white/5">
+                            <span>Cash (Pay at Counter)</span> <i data-lucide="banknote"></i>
+                        </button>
+                        <button id="pay-qris" onclick="selectPayment('qris')" class="py-4 border gold-border rounded-lg text-left px-6 flex justify-between items-center transition-all hover:bg-white/5">
+                            <span>QRIS / Bank Transfer</span> <i data-lucide="qr-code"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" onclick="processOrder()" class="w-full gold-bg text-black font-bold py-4 rounded-lg tracking-widest uppercase mt-8">Place Order</button>
+            </div>
+        </section>
+
+        <!-- LANGKAH 4: VERIFIKASI QRIS -->
+        <section id="step-4" class="step-hidden text-center space-y-8 animate-in fade-in duration-700">
+            <h2 class="text-3xl font-serif gold-text italic">Verify Payment</h2>
+            <div class="glass-card p-10 border gold-border rounded-2xl space-y-8">
+                <div class="bg-white p-4 inline-block rounded-xl shadow-2xl">
+                    <img src="qris.jpg" class="w-56 h-auto object-contain mx-auto" alt="Pembayaran QRIS" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ESTATE_NO_4_QRIS_ERROR'">
+                    <p class="text-black text-[10px] font-bold mt-2 uppercase tracking-tighter">Estate No. 4 Merchant</p>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-sm opacity-60">Scan QR di atas dan unggah bukti transfer:</p>
+                    <div class="border-2 border-dashed gold-border p-8 rounded-xl relative cursor-pointer hover:bg-white/5 transition-colors">
+                        <input type="file" id="receipt-upload" class="absolute inset-0 opacity-0 cursor-pointer" onchange="handleFileSelect(this)">
+                        <div id="upload-hint">
+                            <i data-lucide="upload-cloud" class="mx-auto gold-text w-10 h-10 mb-2"></i>
+                            <p class="text-xs uppercase font-bold tracking-widest">Pilih Struk Bayar</p>
+                        </div>
+                        <p id="file-name" class="text-xs gold-text font-bold hidden"></p>
+                    </div>
+                </div>
+                <button type="button" onclick="confirmQrisPayment()" class="w-full gold-bg text-black font-bold py-4 rounded-lg uppercase tracking-widest">Confirm & Complete</button>
+            </div>
+        </section>
+
+        <!-- LAYAR SUKSES (NOTA DIGITAL) -->
+        <section id="step-success" class="step-hidden flex flex-col items-center justify-center space-y-8 text-center animate-in zoom-in duration-1000 py-10">
+            <div class="w-20 h-20 rounded-full border-2 gold-border flex items-center justify-center animate-pulse"><i data-lucide="check" class="gold-text w-10 h-10"></i></div>
+            
+            <div class="receipt-paper w-full max-w-sm text-left">
+                <div class="text-center border-b border-dashed border-gray-300 pb-4 mb-4">
+                    <h3 class="text-xl font-serif font-bold uppercase tracking-widest">Estate No. 4</h3>
+                    <p class="text-[10px] text-gray-500 italic mt-1">"The Essence of Relish"</p>
+                    <p id="receipt-id" class="text-[9px] font-mono mt-4">ORDER ID: --</p>
+                </div>
+                
+                <div class="space-y-2 text-xs mb-6">
+                    <div class="flex justify-between"><span>Customer:</span> <span id="rec-name" class="font-bold">--</span></div>
+                    <div class="flex justify-between"><span>Phone:</span> <span id="rec-phone">--</span></div>
+                    <div class="flex justify-between"><span>Method:</span> <span id="rec-method" class="uppercase font-bold">--</span></div>
+                    <div id="rec-pickup-row" class="hidden flex justify-between"><span>Pickup:</span> <span id="rec-pickup">--</span></div>
+                </div>
+
+                <div id="receipt-items" class="border-y border-dashed border-gray-300 py-4 space-y-2 mb-4">
+                    <!-- Items go here -->
+                </div>
+
+                <div class="flex justify-between text-lg font-bold">
+                    <span>TOTAL:</span>
+                    <span id="rec-total" class="font-mono">Rp 0</span>
+                </div>
+
+                <div class="mt-8 text-center border-t border-dashed border-gray-300 pt-4 opacity-50">
+                    <p class="text-[9px] uppercase tracking-widest">Thank you for your order</p>
+                    <p class="text-[8px] mt-1 font-mono" id="rec-time-stamp">--</p>
+                </div>
+            </div>
+
+            <p id="final-msg" class="text-lg opacity-80 max-w-sm italic gold-text"></p>
+            <a href="index.html" class="text-xs tracking-[0.4em] uppercase border-b gold-border pt-12 transition-all hover:opacity-50">Back to Home</a>
+        </section>
+
+    </main>
+
+    <!-- Modal Detail -->
+    <div id="modal-box" class="fixed inset-0 z-[100] bg-black/98 flex items-center justify-center p-6 hidden">
+        <div class="max-w-2xl w-full glass-card rounded-2xl overflow-hidden relative border gold-border">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white z-10 hover:rotate-90 transition-all"><i data-lucide="x"></i></button>
+            <img id="m-img" src="" class="w-full h-80 object-cover grayscale">
+            <div class="p-8 space-y-6 text-center">
+                <h3 id="m-title" class="text-3xl font-serif gold-text italic"></h3>
+                <p id="m-desc" class="text-white/60 leading-relaxed font-light"></p>
+                <div class="flex space-x-4">
+                    <button id="m-add-btn" class="flex-1 gold-bg text-black font-bold py-4 rounded-lg uppercase tracking-widest hover:scale-[1.02] transition-all">Add to Cart</button>
+                    <button onclick="toggleLike(this)" class="px-6 border gold-border rounded-lg text-white/40 hover:text-red-500 transition-colors"><i data-lucide="heart"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Module -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp, doc, updateDoc, increment, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+        import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+
+        let db, auth, appId;
+        const BUSINESS_PHONE = "628980720427"; 
+        let state = { 
+            name: '', 
+            phone: '', 
+            method: '', 
+            date: '', 
+            time: '', 
+            cart: [], 
+            payment: '', 
+            orderId: '',
+            stocks: { amber: 0, velvet: 0, midnight: 0 } 
+        };
+
+        window.goToStep = (n) => {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('step-hidden'));
+            const target = document.getElementById(`step-${n}`);
+            if (target) target.classList.remove('step-hidden');
+            window.scrollTo(0,0);
+        };
+
+        window.selectMethod = (m) => {
+            state.method = m;
+            document.getElementById('btn-takeaway').classList.remove('btn-active');
+            document.getElementById('btn-preorder').classList.remove('btn-active');
+            document.getElementById(`btn-${m}`).classList.add('btn-active');
+            document.getElementById('preorder-fields').classList.toggle('hidden', m !== 'preorder');
+            
+            const cashBtn = document.getElementById('pay-cash');
+            if (m === 'preorder') {
+                cashBtn.style.opacity = '0.2'; cashBtn.style.pointerEvents = 'none';
+                if (state.payment === 'cash') state.payment = '';
+            } else {
+                cashBtn.style.opacity = '1'; cashBtn.style.pointerEvents = 'auto';
+            }
+            updatePaymentUI();
+        };
+
+        window.validateStep1 = () => {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            if (!name || !phone || !state.method) return alert("Silakan lengkapi data pemesan.");
+            state.name = name; 
+            state.phone = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+            if (state.method === 'preorder') {
+                state.date = document.getElementById('res-date').value;
+                state.time = document.getElementById('res-time').value;
+                if (!state.date || !state.time) return alert("Lengkapi jadwal pengambilan.");
+            }
+            goToStep(2);
+        };
+
+        window.addToCart = (name, price, stockKey) => {
+            if (state.stocks[stockKey] <= 0) return alert("Maaf, stok item ini sedang habis.");
+            state.cart.push({ name, price, stockKey });
+            document.getElementById('cart-count').innerText = state.cart.length;
+            updateCartUI(); 
+            // Minimal feedback
+        };
+
+        function updateCartUI() {
+            const list = document.getElementById('cart-list');
+            let total = 0;
+            list.innerHTML = state.cart.map((item, i) => {
+                total += item.price;
+                return `<div class="flex justify-between items-center py-2 border-b border-white/5 font-serif italic italic font-light">
+                    <span>${item.name}</span><div class="flex items-center space-x-4">
+                        <span class="text-xs opacity-60">Rp ${item.price.toLocaleString()}</span>
+                        <button onclick="removeItem(${i})" class="text-red-500/40"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div></div>`;
+            }).join('');
+            document.getElementById('total-price-display').innerText = `Rp ${total.toLocaleString()}`;
+            lucide.createIcons();
+        }
+
+        window.removeItem = (i) => { state.cart.splice(i, 1); document.getElementById('cart-count').innerText = state.cart.length; updateCartUI(); };
+        window.selectPayment = (p) => { state.payment = p; updatePaymentUI(); };
+        function updatePaymentUI() {
+            document.getElementById('pay-cash').classList.toggle('btn-active', state.payment === 'cash');
+            document.getElementById('pay-qris').classList.toggle('btn-active', state.payment === 'qris');
+        }
+
+        window.openDetail = (t, d, i, stockKey) => {
+            document.getElementById('m-title').innerText = t; document.getElementById('m-desc').innerText = d; document.getElementById('m-img').src = i;
+            const addBtn = document.getElementById('m-add-btn');
+            if (state.stocks[stockKey] <= 0) {
+                addBtn.innerText = "SOLD OUT"; addBtn.className = "flex-1 bg-red-900/20 text-red-500 font-bold py-4 rounded-lg"; addBtn.onclick = null;
+            } else {
+                addBtn.innerText = "Add to Cart"; addBtn.className = "flex-1 gold-bg text-black font-bold py-4 rounded-lg";
+                addBtn.onclick = () => { window.addToCart(t, 75000, stockKey); window.closeModal(); };
+            }
+            document.getElementById('modal-box').classList.remove('hidden');
+        };
+
+        window.closeModal = () => { document.getElementById('modal-box').classList.add('hidden'); };
+        window.toggleLike = (btn) => { btn.classList.toggle('text-red-500'); };
+        window.handleFileSelect = (input) => {
+            if (input.files[0]) {
+                document.getElementById('file-name').innerText = "File: " + input.files[0].name;
+                document.getElementById('file-name').classList.remove('hidden');
+                document.getElementById('upload-hint').classList.add('hidden');
+            }
+        };
+
+        window.processOrder = () => {
+            if (state.cart.length === 0) return alert("Keranjang kosong.");
+            if (!state.payment) return alert("Pilih pembayaran.");
+            if (state.payment === 'cash') saveOrder("we have received your order, please kindly wait...");
+            else goToStep(4);
+        };
+
+        window.confirmQrisPayment = () => {
+            if (!document.getElementById('receipt-upload').files[0]) return alert("please upload your payment receipt");
+            saveOrder("we have received your order, we will be waiting for you ^^");
+        };
+
+        async function saveOrder(msg) {
+            // Generate Order ID
+            state.orderId = 'EST-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            
+            try {
+                if (db) {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), {
+                        ...state, 
+                        status: 'pending', 
+                        createdAt: serverTimestamp()
+                    });
+                    for (const item of state.cart) {
+                        const ref = doc(db, 'artifacts', appId, 'public', 'data', 'warehouse', item.stockKey);
+                        await updateDoc(ref, { stock: increment(-1) });
+                    }
+                }
+                
+                // Format Pesan WhatsApp sbg Struk
+                const itemsList = state.cart.map(i => `- ${i.name} (1x)`).join('%0A');
+                const totalText = document.getElementById('total-price-display').innerText;
+                const pickupDetail = state.method === 'preorder' ? `%0A*Pickup Time:* ${state.date} @ ${state.time}` : '';
+                
+                const waNota = `*NOTA PESANAN - Estate No. 4*%0A---------------------------%0A*Order ID:* ${state.orderId}%0A*Nama:* ${state.name}%0A*Metode:* ${state.method}${pickupDetail}%0A---------------------------%0A*Pesanan:*%0A${itemsList}%0A---------------------------%0A*TOTAL:* ${totalText}%0A%0AWe will inform you if your order is ready via this chat.`;
+                
+                // Buka WA (Kirim dari Customer ke Bisnis)
+                window.open(`https://wa.me/${BUSINESS_PHONE}?text=${waNota}`, '_blank');
+
+                // Render Struk Digital di Web
+                renderDigitalReceipt(msg);
+
+            } catch (e) { alert("Sistem sibuk."); }
+        }
+
+        function renderDigitalReceipt(msg) {
+            document.getElementById('receipt-id').innerText = `ORDER ID: ${state.orderId}`;
+            document.getElementById('rec-name').innerText = state.name;
+            document.getElementById('rec-phone').innerText = state.phone;
+            document.getElementById('rec-method').innerText = state.method;
+            
+            if(state.method === 'preorder') {
+                document.getElementById('rec-pickup-row').classList.remove('hidden');
+                document.getElementById('rec-pickup').innerText = `${state.date} @ ${state.time}`;
+            }
+
+            const itemContainer = document.getElementById('receipt-items');
+            itemContainer.innerHTML = state.cart.map(item => `
+                <div class="flex justify-between text-[11px]">
+                    <span>${item.name}</span>
+                    <span>Rp ${item.price.toLocaleString()}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('rec-total').innerText = document.getElementById('total-price-display').innerText;
+            document.getElementById('rec-time-stamp').innerText = new Date().toLocaleString();
+            document.getElementById('final-msg').innerText = msg;
+
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('step-hidden'));
+            document.getElementById('step-success').classList.remove('step-hidden');
+            window.scrollTo(0,0);
+        }
+
+        function syncWarehouse() {
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'warehouse'), (snapshot) => {
+                snapshot.forEach(d => {
+                    const key = d.id; state.stocks[key] = d.data().stock;
+                    const card = document.getElementById(`card-${key}`);
+                    if (card) {
+                        card.querySelector('.stock-label').innerText = `Stock: ${d.data().stock}`;
+                        if (d.data().stock <= 0) card.classList.add('sold-out');
+                        else card.classList.remove('sold-out');
+                    }
+                });
+            });
+        }
+
+        try {
+            if (typeof __firebase_config !== 'undefined') {
+                const config = JSON.parse(__firebase_config);
+                const app = initializeApp(config);
+                db = getFirestore(app); auth = getAuth(app);
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'estate-no-4';
+                onAuthStateChanged(auth, (u) => { if (!u) signInAnonymously(auth); else syncWarehouse(); });
+            }
+        } catch (err) { console.warn("Firebase not ready."); }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
