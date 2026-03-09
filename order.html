@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order | Estate No. 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f0f; color: #e5e5e5; display: flex; flex-direction: column; min-height: 100vh; }
+        main { flex: 1; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-text { color: #c5a059; }
+        .gold-bg { background-color: #c5a059; }
+        .gold-border { border-color: rgba(197, 160, 89, 0.3); }
+        .step-hidden { display: none !important; }
+        input, select { background: #1a1a1a; border: 1px solid rgba(197, 160, 89, 0.3); color: white; padding: 12px; border-radius: 4px; outline: none; width: 100%; }
+        input:focus { border-color: #c5a059; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(197, 160, 89, 0.1); }
+        .btn-active { background-color: #c5a059 !important; color: black !important; font-weight: bold !important; }
+        
+        .receipt-paper {
+            background: #fefefe;
+            color: #333;
+            padding: 30px;
+            border-radius: 2px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .receipt-paper::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(-45deg, transparent 5px, #fefefe 5px), linear-gradient(45deg, transparent 5px, #fefefe 5px);
+            background-size: 10px 10px;
+        }
+    </style>
+</head>
+<body class="bg-[#0f0f0f]">
+
+    <nav class="py-8 px-8 flex justify-between items-center border-b gold-border sticky top-0 bg-[#0f0f0f] z-50 backdrop-blur-md">
+        <a href="index.html" class="flex items-center space-x-2 text-xs uppercase opacity-60 hover:opacity-100 transition-opacity">
+            <i data-lucide="arrow-left" class="w-4 h-4 gold-text"></i> Back To Home
+        </a>
+        <span class="text-2xl font-light gold-text font-serif">Estate No. 4</span>
+        <div class="relative cursor-pointer" onclick="goToStep(3)">
+            <i data-lucide="shopping-cart" class="gold-text w-6 h-6"></i>
+            <span id="cart-count" class="absolute -top-2 -right-2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 py-12 w-full">
+        
+        <section id="step-1" class="space-y-8 animate-in fade-in">
+            <h2 class="text-4xl font-serif gold-text text-center italic">Start Your Order</h2>
+            <div class="glass-card p-8 rounded-2xl space-y-6">
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Your Name</label>
+                    <input type="text" id="cust-name">
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Phone Number</label>
+                    <input type="tel" id="cust-phone" placeholder="e.g. 62812345678">
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Select Method</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button" onclick="selectMethod('takeaway')" id="btn-takeaway" class="py-4 border gold-border rounded-lg transition-all">Take Away</button>
+                        <button type="button" onclick="selectMethod('preorder')" id="btn-preorder" class="py-4 border gold-border rounded-lg transition-all">Pre-Order</button>
+                    </div>
+                </div>
+                
+                <div id="preorder-fields" class="hidden grid grid-cols-2 gap-4 pt-4 border-t gold-border">
+                    <div><label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Pick Up Date</label><input type="date" id="res-date"></div>
+                    <div><label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Pick Up Time</label><input type="time" id="res-time"></div>
+                </div>
+
+                <button type="button" onclick="validateStep1()" class="w-full gold-bg text-black font-bold py-4 rounded-lg uppercase tracking-widest mt-4 hover:scale-[1.01] transition-transform shadow-lg shadow-yellow-900/10">Browse Menu</button>
+            </div>
+        </section>
+
+        <section id="step-2" class="step-hidden space-y-12 animate-in fade-in">
+            <div class="text-center">
+                <h2 class="text-4xl font-serif gold-text italic">The Collection</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="amber.jpg" onclick="openDetail('Amber Note', 'Premium lemon blend.', 'amber.jpg')" class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <div class="p-6 flex justify-between items-center">
+                        <h4 class="font-serif">Amber Note</h4>
+                        <button onclick="addToCart('Amber Note', 10000)" class="gold-text text-[10px] font-bold border-b gold-border">ADD TO CART</button>
+                    </div>
+                </div>
+                <div class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="velvet.jpg" onclick="openDetail('Velvet Note', 'Sweet strawberry vibe.', 'velvet.jpg')" class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <div class="p-6 flex justify-between items-center">
+                        <h4 class="font-serif">Velvet Note</h4>
+                        <button onclick="addToCart('Velvet Note', 10000)" class="gold-text text-[10px] font-bold border-b gold-border">ADD TO CART</button>
+                    </div>
+                </div>
+                <div class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="marine.jpg" onclick="openDetail('Marine Note', 'Blue refreshing citrus.', 'marine.jpg')" class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <div class="p-6 flex justify-between items-center">
+                        <h4 class="font-serif">Marine Note</h4>
+                        <button onclick="addToCart('Marine Note', 10000)" class="gold-text text-[10px] font-bold border-b gold-border">ADD TO CART</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="goToStep(3)" class="w-full gold-bg text-black font-bold py-4 rounded-lg uppercase tracking-widest mt-8">Review Order</button>
+        </section>
+
+        <section id="step-3" class="step-hidden space-y-8 animate-in fade-in">
+            <h2 class="text-3xl font-serif gold-text text-center italic">Order Summary</h2>
+            <div class="glass-card p-8 rounded-2xl border gold-border">
+                <div id="cart-list" class="space-y-4 mb-8"></div>
+                <div class="border-t gold-border pt-4 flex justify-between items-center mb-8">
+                    <span class="uppercase tracking-widest text-xs opacity-60">Total</span>
+                    <span id="total-price-display" class="text-xl font-bold gold-text">Rp 0</span>
+                </div>
+                <div class="space-y-4">
+                    <button id="pay-cash" onclick="selectPayment('cash')" class="w-full py-4 border gold-border rounded-lg text-left px-6 flex justify-between items-center"><span>Cash</span><i data-lucide="banknote"></i></button>
+                    <button id="pay-qris" onclick="selectPayment('qris')" class="w-full py-4 border gold-border rounded-lg text-left px-6 flex justify-between items-center"><span>QRIS</span><i data-lucide="qr-code"></i></button>
+                </div>
+                <button type="button" id="btn-final-place" onclick="processOrder()" class="w-full gold-bg text-black font-bold py-4 rounded-lg uppercase tracking-widest mt-8">Place Order</button>
+            </div>
+        </section>
+
+        <section id="step-4" class="step-hidden text-center space-y-8 animate-in fade-in">
+            <h2 class="text-3xl font-serif gold-text italic">Verify Payment</h2>
+            <div class="glass-card p-10 border gold-border rounded-2xl space-y-8">
+                <div class="bg-white p-4 inline-block rounded-xl"><img src="qris.jpg" class="w-56 h-auto" alt="QRIS" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ESTATE_NO_4'"></div>
+                <div class="border-2 border-dashed gold-border p-8 rounded-xl relative">
+                    <input type="file" id="receipt-upload" class="absolute inset-0 opacity-0" onchange="handleFileSelect(this)">
+                    <p id="file-hint" class="text-xs uppercase font-bold tracking-widest">Tap to Upload Receipt</p>
+                </div>
+                <button type="button" onclick="confirmQrisPayment()" class="w-full gold-bg text-black font-bold py-4 rounded-lg uppercase tracking-widest">Confirm & Finish</button>
+            </div>
+        </section>
+
+        <section id="step-success" class="step-hidden flex flex-col items-center justify-center space-y-8 py-10 animate-in zoom-in">
+            <div class="receipt-paper w-full max-w-sm text-left">
+                <div class="text-center border-b border-dashed border-gray-300 pb-4 mb-4">
+                    <h3 class="text-xl font-serif font-bold uppercase tracking-widest">Estate No. 4</h3>
+                    <p id="receipt-id" class="text-[9px] font-mono mt-4">ORDER ID: --</p>
+                </div>
+                <div id="receipt-items" class="py-4 space-y-2 mb-4 text-xs"></div>
+                <div class="flex justify-between text-lg font-bold border-t border-dashed border-gray-300 pt-4"><span>TOTAL:</span><span id="rec-total">Rp 0</span></div>
+            </div>
+            <p class="italic text-center gold-text">Order has been sent to Admin. Please wait...</p>
+            <a href="index.html" class="text-xs tracking-[0.4em] uppercase border-b gold-border">Back Home</a>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+        import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+
+        // --- KONFIGURASI UNTUK HOSTING ---
+        // Jika Anda mengunggah ke hosting sendiri, ganti empty string di bawah dengan config dari Firebase Console Anda.
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "GANTI_DENGAN_API_KEY_ANDA",
+            authDomain: "GANTI_DENGAN_DOMAIN_ANDA",
+            projectId: "GANTI_DENGAN_PROJECT_ID_ANDA",
+            storageBucket: "GANTI_DENGAN_BUCKET_ANDA",
+            messagingSenderId: "GANTI_SENDER_ID_ANDA",
+            appId: "GANTI_APP_ID_ANDA"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appIdGlobal = typeof __app_id !== 'undefined' ? __app_id : 'estate-no-4';
+        
+        let currentUser = null;
+        let state = { name: '', phone: '', method: '', date: '', time: '', cart: [], payment: '', orderId: '' };
+
+        // 1. Auth Listener - WAJIB LOGIN ANONIM
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                console.log("Authenticated as:", user.uid);
+            } else {
+                signInAnonymously(auth).catch(e => console.error("Auth fail:", e));
+            }
+        });
+
+        window.goToStep = (n) => {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('step-hidden'));
+            const target = typeof n === 'number' ? document.getElementById(`step-${n}`) : document.getElementById(`step-${n}`);
+            if (target) target.classList.remove('step-hidden');
+            window.scrollTo(0,0);
+        };
+
+        window.selectMethod = (m) => {
+            state.method = m;
+            document.getElementById('btn-takeaway').classList.remove('btn-active');
+            document.getElementById('btn-preorder').classList.remove('btn-active');
+            document.getElementById(`btn-${m}`).classList.add('btn-active');
+            document.getElementById('preorder-fields').classList.toggle('hidden', m !== 'preorder');
+            updatePaymentUI();
+        };
+
+        window.validateStep1 = () => {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            if (!name || !phone || !state.method) return alert("Lengkapi data pemesan.");
+            state.name = name; state.phone = phone;
+            if (state.method === 'preorder' && (!document.getElementById('res-date').value || !document.getElementById('res-time').value)) return alert("Lengkapi jadwal.");
+            state.date = document.getElementById('res-date').value;
+            state.time = document.getElementById('res-time').value;
+            goToStep(2);
+        };
+
+        window.addToCart = (name, price) => {
+            state.cart.push({ name, price });
+            document.getElementById('cart-count').innerText = state.cart.length;
+            updateCartUI();
+            alert(name + " added.");
+        };
+
+        function updateCartUI() {
+            const list = document.getElementById('cart-list');
+            let total = 0;
+            list.innerHTML = state.cart.map((item, i) => {
+                total += item.price;
+                return `<div class="flex justify-between py-2 border-b border-white/5 text-sm"><span>${item.name}</span><span>Rp ${item.price.toLocaleString()}</span></div>`;
+            }).join('');
+            document.getElementById('total-price-display').innerText = `Rp ${total.toLocaleString()}`;
+            lucide.createIcons();
+        }
+
+        window.selectPayment = (p) => { state.payment = p; updatePaymentUI(); };
+        function updatePaymentUI() {
+            document.getElementById('pay-cash').classList.toggle('btn-active', state.payment === 'cash');
+            document.getElementById('pay-qris').classList.toggle('btn-active', state.payment === 'qris');
+        }
+
+        window.handleFileSelect = (input) => { if(input.files[0]) document.getElementById('file-hint').innerText = input.files[0].name; };
+
+        window.processOrder = () => {
+            if (state.cart.length === 0) return alert("Keranjang kosong.");
+            if (!state.payment) return alert("Pilih pembayaran.");
+            if (state.payment === 'cash') saveToFirebase();
+            else goToStep(4);
+        };
+
+        window.confirmQrisPayment = () => {
+            if (!document.getElementById('receipt-upload').files[0]) return alert("Upload bukti bayar.");
+            saveToFirebase();
+        };
+
+        async function saveToFirebase() {
+            const btn = document.getElementById('btn-final-place');
+            if (btn) btn.disabled = true;
+
+            // Pastikan user login (Rule 3)
+            if (!currentUser) {
+                try {
+                    const result = await signInAnonymously(auth);
+                    currentUser = result.user;
+                } catch(e) { return alert("Koneksi gagal. Coba lagi."); }
+            }
+
+            state.orderId = 'EST-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+            try {
+                // Simpan ke Firestore (Rule 1)
+                await addDoc(collection(db, 'artifacts', appIdGlobal, 'public', 'data', 'orders'), {
+                    ...state,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+
+                // Render Receipt
+                document.getElementById('receipt-id').innerText = `ORDER ID: ${state.orderId}`;
+                document.getElementById('receipt-items').innerHTML = state.cart.map(i => `<div class="flex justify-between"><span>${i.name}</span><span>Rp ${i.price.toLocaleString()}</span></div>`).join('');
+                document.getElementById('rec-total').innerText = document.getElementById('total-price-display').innerText;
+                
+                goToStep('success');
+            } catch (e) {
+                console.error(e);
+                alert("Gagal kirim pesanan. Cek koneksi internet.");
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>

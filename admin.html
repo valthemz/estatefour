@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Estate No. 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #080808; color: #e5e5e5; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-text { color: #c5a059; }
+        .gold-border { border-color: rgba(197, 160, 89, 0.2); }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(197, 160, 89, 0.1); }
+        .status-badge { font-size: 10px; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; font-weight: bold; }
+        .status-pending { background: #f59e0b20; color: #f59e0b; }
+        .status-ready { background: #10b98120; color: #10b981; }
+        .step-hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Layar Login Admin -->
+    <div id="login-screen" class="fixed inset-0 z-[200] bg-black flex items-center justify-center">
+        <div class="glass-card p-10 rounded-2xl w-full max-w-sm text-center space-y-6 shadow-2xl">
+            <h2 class="text-3xl font-serif gold-text italic">Admin Access</h2>
+            <p class="text-xs opacity-50 uppercase tracking-widest">Masukkan PIN</p>
+            <input type="password" id="admin-pin" placeholder="••••" class="text-center bg-neutral-900 border gold-border p-4 w-full rounded outline-none text-2xl tracking-[0.5em] text-white">
+            <button id="login-btn" class="w-full bg-[#c5a059] text-black font-bold py-4 rounded hover:bg-[#d4b47a] transition-all uppercase tracking-widest">Login</button>
+        </div>
+    </div>
+
+    <!-- Konten Dashboard -->
+    <div id="dashboard" class="step-hidden min-h-screen">
+        <nav class="p-6 border-b gold-border flex justify-between items-center bg-black/50 sticky top-0 z-50 backdrop-blur-md">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-serif gold-text italic tracking-tighter">Estate Admin Panel</span>
+            </div>
+            <div class="flex items-center space-x-6 text-xs uppercase opacity-60">
+                <span id="sync-status" class="flex items-center">
+                    <span id="sync-dot" class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                    <span id="sync-text">Connecting...</span>
+                </span>
+                <button onclick="location.reload()" class="hover:text-white border border-white/20 px-3 py-1 rounded transition-colors font-bold">Logout</button>
+            </div>
+        </nav>
+
+        <main class="max-w-6xl mx-auto p-8 space-y-12">
+            
+            <!-- Antrean Pesanan Aktif -->
+            <section class="space-y-6">
+                <h3 class="text-2xl font-serif gold-text border-b gold-border pb-2 flex items-center">
+                    <i data-lucide="list-ordered" class="mr-3 w-6 h-6"></i> Pesanan Masuk
+                </h3>
+                <div id="order-queue" class="grid grid-cols-1 md:grid-cols-2 gap-6 font-sans">
+                    <div class="col-span-full py-20 text-center opacity-30 italic font-serif">Menunggu data dari server...</div>
+                </div>
+            </section>
+
+            <!-- Riwayat Penjualan -->
+            <section class="space-y-6">
+                <h3 class="text-2xl font-serif gold-text border-b gold-border pb-2 flex items-center opacity-50">
+                    <i data-lucide="history" class="mr-3 w-6 h-6"></i> Riwayat Selesai
+                </h3>
+                <div class="overflow-x-auto glass-card rounded-2xl border gold-border shadow-lg">
+                    <table class="w-full text-left text-sm">
+                        <thead class="text-[10px] uppercase opacity-40 border-b border-white/5 bg-white/5 font-sans">
+                            <tr>
+                                <th class="p-4">ID Pesanan</th>
+                                <th class="p-4">Customer</th>
+                                <th class="p-4">Items</th>
+                                <th class="p-4 text-right">Total</th>
+                                <th class="p-4 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-list" class="font-sans">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getFirestore, collection, onSnapshot, updateDoc, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+
+        let db, auth, appId, user;
+
+        // FUNGSI LOGIN PIN
+        window.handleLogin = async () => {
+            const pinInput = document.getElementById('admin-pin').value;
+            if(pinInput === "1234") {
+                document.getElementById('login-screen').classList.add('step-hidden');
+                document.getElementById('dashboard').classList.remove('step-hidden');
+                await initAdminSystem();
+            } else {
+                alert("PIN Admin Salah!");
+                document.getElementById('admin-pin').value = "";
+            }
+        };
+
+        document.getElementById('login-btn').onclick = window.handleLogin;
+
+        async function initAdminSystem() {
+            try {
+                // Konfigurasi otomatis dari environment Canvas atau manual untuk hosting
+                const configStr = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+                const customToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'estate-no-4';
+
+                if (!configStr) {
+                    document.getElementById('sync-text').innerText = 'Config Error';
+                    return;
+                }
+
+                const firebaseConfig = JSON.parse(configStr);
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Autentikasi terlebih dahulu
+                const performAuth = async () => {
+                    if (customToken) await signInWithCustomToken(auth, customToken);
+                    else await signInAnonymously(auth);
+                };
+
+                await performAuth();
+
+                onAuthStateChanged(auth, (u) => { 
+                    user = u;
+                    if (user) {
+                        document.getElementById('sync-dot').classList.replace('bg-red-500', 'bg-emerald-500');
+                        document.getElementById('sync-dot').classList.add('animate-pulse');
+                        document.getElementById('sync-text').innerText = 'Live Update On';
+                        startSync();
+                    }
+                });
+
+            } catch (e) { 
+                console.error("Firebase Error:", e);
+                document.getElementById('sync-text').innerText = 'Connection Error';
+            }
+        }
+
+        function startSync() {
+            if (!user) return;
+
+            // Jalur database orders
+            const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+
+            onSnapshot(ordersRef, (snapshot) => {
+                const queueContainer = document.getElementById('order-queue');
+                const historyList = document.getElementById('history-list');
+                
+                queueContainer.innerHTML = '';
+                historyList.innerHTML = '';
+
+                // Memproses data dari snapshot
+                const allOrders = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                
+                // Urutkan pesanan terbaru di atas
+                allOrders.sort((a, b) => {
+                    const tA = a.createdAt?.seconds || 0;
+                    const tB = b.createdAt?.seconds || 0;
+                    return tB - tA;
+                });
+
+                const activeOrders = allOrders.filter(o => o.status !== 'completed');
+                const completedOrders = allOrders.filter(o => o.status === 'completed');
+
+                if (activeOrders.length === 0) {
+                    queueContainer.innerHTML = '<div class="col-span-full py-20 text-center opacity-30 italic font-serif">Belum ada pesanan aktif.</div>';
+                }
+
+                activeOrders.forEach(order => {
+                    const isReady = order.status === 'ready';
+                    queueContainer.innerHTML += `
+                        <div class="glass-card p-6 rounded-2xl border ${isReady ? 'border-emerald-500/40 bg-emerald-500/5' : 'gold-border'} space-y-4 shadow-xl">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-xl font-serif gold-text font-bold">${order.name || 'Anonymous'}</h4>
+                                    <p class="text-[10px] uppercase opacity-40 tracking-widest mt-1">
+                                        ID: ${order.orderId || 'NEW'} | HP: ${order.phone || '-'}
+                                    </p>
+                                    <p class="text-[9px] uppercase font-bold text-white/30 mt-1">${order.method || 'Order'} | ${order.payment || '-'}</p>
+                                </div>
+                                <span class="status-badge ${isReady ? 'status-ready' : 'status-pending'}">${order.status || 'pending'}</span>
+                            </div>
+                            
+                            <div class="text-sm font-light italic opacity-70 border-l gold-border pl-4 py-1">
+                                ${order.cart ? order.cart.map(i => `- ${i.name}`).join('<br>') : 'No items'}
+                            </div>
+
+                            ${order.method === 'preorder' ? `
+                                <div class="bg-white/5 p-2 rounded text-[10px] font-mono italic opacity-60">
+                                    Pickup: ${order.date || '-'} @ ${order.time || '-'}
+                                </div>
+                            ` : ''}
+
+                            <div class="flex space-x-2 pt-2">
+                                ${!isReady ? 
+                                    `<button onclick="updateStatus('${order.id}', 'ready')" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-lg text-[10px] uppercase tracking-widest hover:bg-emerald-500 transition-all">Minuman Siap</button>` :
+                                    `<button onclick="updateStatus('${order.id}', 'completed')" class="flex-1 bg-white text-black font-bold py-3 rounded-lg text-[10px] uppercase tracking-widest hover:bg-neutral-200 transition-all">Pesanan Diambil</button>`
+                                }
+                            </div>
+                        </div>`;
+                });
+
+                completedOrders.forEach(order => {
+                    historyList.innerHTML += `
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-4 font-mono text-[10px] opacity-60">${order.orderId || '-'}</td>
+                            <td class="p-4 font-bold text-xs">${order.name || '-'}</td>
+                            <td class="p-4 italic text-xs font-serif">${order.cart ? order.cart.map(i => i.name).join(', ') : '-'}</td>
+                            <td class="p-4 gold-text font-bold text-xs text-right">Rp ${order.cart ? order.cart.reduce((a, b) => a + (b.price || 0), 0).toLocaleString() : '0'}</td>
+                            <td class="p-4 text-right">
+                                <button onclick="deleteRecord('${order.id}')" class="text-red-500/30 hover:text-red-500 transition-colors p-2">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>`;
+                });
+                lucide.createIcons();
+            }, (error) => console.error("Snapshot Error:", error));
+        }
+
+        // FUNGSI UPDATE STATUS
+        window.updateStatus = async (docId, newStatus) => {
+            if (!user) return;
+            try {
+                const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', docId);
+                await updateDoc(orderRef, { status: newStatus });
+            } catch (e) { alert("Gagal memperbarui status."); }
+        };
+
+        // FUNGSI HAPUS RIWAYAT
+        window.deleteRecord = async (docId) => {
+            if (!user) return;
+            if (confirm("Hapus riwayat pesanan ini?")) {
+                try {
+                    const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', docId);
+                    await deleteDoc(orderRef);
+                } catch (e) { alert("Gagal menghapus."); }
+            }
+        };
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
