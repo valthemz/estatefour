@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu PDF | Estate No. 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f0f; color: #e5e5e5; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-text { color: #c5a059; }
+        .gold-border { border-color: rgba(197, 160, 89, 0.3); }
+        .pdf-container {
+            height: calc(100vh - 120px);
+            width: 100%;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigasi -->
+    <nav class="py-6 px-8 flex justify-between items-center border-b gold-border bg-[#0f0f0f]">
+        <a href="index.html" class="flex items-center space-x-2 text-xs uppercase opacity-60 hover:opacity-100 transition-opacity">
+            <i data-lucide="arrow-left" class="w-4 h-4 gold-text"></i> back to home
+        </a>
+        <span class="text-xl font-light gold-text font-serif italic">Digital Menu</span>
+        <div class="w-20"></div>
+    </nav>
+
+    <main class="flex-1 p-6 max-w-5xl mx-auto w-full">
+        <div class="pdf-container">
+            <embed src="menu.pdf" type="application/pdf" width="100%" height="100%" />
+
+            <div class="flex flex-col items-center justify-center h-full p-10 text-center md:hidden">
+                <i data-lucide="file-text" class="w-16 h-16 gold-text mb-4 opacity-20"></i>
+                <p class="mb-6 opacity-60">Pratinjau PDF mungkin tidak tersedia di perangkat ini.</p>
+                <a href="menu.pdf" download class="bg-[#c5a059] text-black px-8 py-3 font-bold rounded uppercase tracking-widest text-xs">
+                    Unduh Menu PDF
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 text-center border-t gold-border opacity-30 text-[10px] uppercase tracking-widest">
+        © 2026 Estate No. 4
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
