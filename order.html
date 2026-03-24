@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order | Estate No. 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f0f; color: #e5e5e5; display: flex; flex-direction: column; min-height: 100vh; }
+        main { flex: 1; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-text { color: #c5a059; }
+        .gold-bg { background-color: #c5a059; }
+        .gold-border { border-color: rgba(197, 160, 89, 0.3); }
+        .step-hidden { display: none !important; }
+        input, select { background: #1a1a1a; border: 1px solid rgba(197, 160, 89, 0.3); color: white; padding: 12px; border-radius: 4px; outline: none; width: 100%; }
+        input:focus { border-color: #c5a059; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(197, 160, 89, 0.1); }
+        .btn-active { background-color: #c5a059 !important; color: black !important; font-weight: bold !important; }
+        
+        /* Gaya Struk Digital */
+        .receipt-paper {
+            background: #fefefe;
+            color: #333;
+            padding: 30px;
+            border-radius: 2px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .receipt-paper::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(-45deg, transparent 5px, #fefefe 5px), linear-gradient(45deg, transparent 5px, #fefefe 5px);
+            background-size: 10px 10px;
+        }
+    </style>
+</head>
+<body class="bg-[#0f0f0f]">
+
+    <!-- Navigasi -->
+    <nav class="py-8 px-8 flex justify-between items-center border-b gold-border sticky top-0 bg-[#0f0f0f] z-50 backdrop-blur-md">
+        <a href="index.html" class="flex items-center space-x-2 text-xs uppercase opacity-60 hover:opacity-100 transition-opacity">
+            <i data-lucide="arrow-left" class="w-4 h-4 gold-text"></i> Kembali ke Beranda
+        </a>
+        <span class="text-2xl font-light gold-text font-serif">Estate No. 4</span>
+        <div class="relative cursor-pointer" onclick="goToStep(3)">
+            <i data-lucide="shopping-cart" class="gold-text w-6 h-6"></i>
+            <span id="cart-count" class="absolute -top-2 -right-2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 py-12 w-full">
+        
+        <!-- LANGKAH 1: IDENTITAS -->
+        <section id="step-1" class="space-y-8 animate-in fade-in duration-700">
+            <h2 class="text-4xl font-serif gold-text text-center italic tracking-tight">Mulai Pesanan</h2>
+            <div class="glass-card p-8 rounded-2xl space-y-6">
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60 font-bold">Atas Nama</label>
+                    <input type="text" id="cust-name" placeholder="Masukkan nama Anda">
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60 font-bold">Nomor Whatsapp</label>
+                    <input type="tel" id="cust-phone" placeholder="Contoh: 08123456789">
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60 font-bold">Metode Pengambilan</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button" onclick="selectMethod('takeaway')" id="btn-takeaway" class="py-4 border gold-border rounded-lg transition-all hover:bg-white/5">Take Away</button>
+                        <button type="button" onclick="selectMethod('preorder')" id="btn-preorder" class="py-4 border gold-border rounded-lg transition-all hover:bg-white/5">Pre-Order</button>
+                    </div>
+                </div>
+                
+                <div id="preorder-fields" class="hidden grid grid-cols-2 gap-4 pt-4 border-t gold-border animate-in slide-in-from-top">
+                    <div>
+                        <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Pilih Tanggal</label>
+                        <input type="date" id="res-date">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60">Pilih Jam</label>
+                        <input type="time" id="res-time">
+                    </div>
+                </div>
+
+                <button type="button" onclick="validateStep1()" class="w-full gold-bg text-black font-bold py-4 rounded-lg uppercase tracking-widest mt-4 shadow-lg hover:scale-[1.01] transition-all">Lihat Menu</button>
+            </div>
+        </section>
+
+        <!-- LANGKAH 2: MENU -->
+        <section id="step-2" class="step-hidden space-y-12 animate-in fade-in duration-700">
+            <div class="text-center">
+                <h2 class="text-4xl font-serif gold-text italic">Koleksi Menu</h2>
+                <p class="text-sm opacity-50 mt-2 italic text-center">Precision-built for the perfect balance</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Amber Note -->
+                <div class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="amber.jpg" 
+                         onclick="openDetail('Amber Note', 'Premium lemon, crisp soda, and fresh mint over ice. A classic, sparkling masterpiece.', 'amber.jpg')"
+                         class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700"
+                         onerror="this.src='https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=500'">
+                    <div class="p-6 space-y-4">
+                        <h4 class="text-xl font-serif">Amber Note</h4>
+                        <div class="flex justify-between items-center text-xs font-bold tracking-widest">
+                            <span class="gold-text">Rp 10,000</span>
+                            <button onclick="addToCart('Amber Note', 10000)" class="gold-text border-b gold-border hover:opacity-70">TAMBAH</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Velvet Note -->
+                <div class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="velvet.jpg"
+                         onclick="openDetail('Velvet Note', 'Luscious strawberry, crisp soda, and fresh garnishes over ice.', 'velvet.jpg')"
+                         class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700"
+                         onerror="this.src='https://images.unsplash.com/photo-1497534446932-c946e7316ad3?auto=format&fit=crop&q=80&w=500'">
+                    <div class="p-6 space-y-4">
+                        <h4 class="text-xl font-serif">Velvet Note</h4>
+                        <div class="flex justify-between items-center text-xs font-bold tracking-widest">
+                            <span class="gold-text">Rp 10,000</span>
+                            <button onclick="addToCart('Velvet Note', 10000)" class="gold-text border-b gold-border hover:opacity-70">TAMBAH</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Marine Note -->
+                <div class="glass-card overflow-hidden rounded-xl border gold-border group">
+                    <img src="marine.jpg" 
+                         onclick="openDetail('Marine Note', 'Vibrant blue citrus, crisp soda, and a touch of fresh lime.', 'marine.jpg')"
+                         class="w-full h-64 object-cover cursor-pointer grayscale group-hover:grayscale-0 transition-all duration-700"
+                         onerror="this.src='https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=500'">
+                    <div class="p-6 space-y-4">
+                        <h4 class="text-xl font-serif">Marine Note</h4>
+                        <div class="flex justify-between items-center text-xs font-bold tracking-widest">
+                            <span class="gold-text">Rp 10,000</span>
+                            <button onclick="addToCart('Marine Note', 10000)" class="gold-text border-b gold-border hover:opacity-70">TAMBAH</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="goToStep(3)" class="w-full gold-bg text-black font-bold py-4 rounded-lg tracking-widest uppercase mt-8 transition-transform active:scale-95 shadow-lg">Lanjutkan Pesanan</button>
+        </section>
+
+        <!-- LANGKAH 3: RINGKASAN -->
+        <section id="step-3" class="step-hidden space-y-8 animate-in fade-in duration-700">
+            <h2 class="text-3xl font-serif gold-text text-center italic">Ringkasan Pesanan</h2>
+            <div class="glass-card p-8 rounded-2xl border gold-border">
+                <div id="cart-list" class="space-y-4 mb-8 text-sm"></div>
+                <div class="border-t gold-border pt-4 flex justify-between items-center mb-8">
+                    <span class="uppercase tracking-widest text-xs opacity-60">Total</span>
+                    <span id="total-price-display" class="text-xl font-bold gold-text">Rp 0</span>
+                </div>
+                <div class="space-y-6">
+                    <label class="block text-[10px] tracking-widest uppercase mb-2 opacity-60 font-bold">Pilih Pembayaran</label>
+                    <div class="grid grid-cols-1 gap-4">
+                        <button id="pay-cash" onclick="selectPayment('cash')" class="py-4 border gold-border rounded-lg text-left px-6 flex justify-between items-center hover:bg-white/5 transition-all">
+                            <span>Tunai (Kasir)</span> <i data-lucide="banknote"></i>
+                        </button>
+                        <button id="pay-qris" onclick="selectPayment('qris')" class="py-4 border gold-border rounded-lg text-left px-6 flex justify-between items-center hover:bg-white/5 transition-all">
+                            <span>QRIS / Transfer</span> <i data-lucide="qr-code"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" id="btn-final-order" onclick="processOrder()" class="w-full gold-bg text-black font-bold py-4 rounded-lg tracking-widest uppercase mt-8 shadow-lg active:scale-95 transition-transform">Kirim Pesanan</button>
+            </div>
+        </section>
+
+        <!-- LANGKAH SUKSES -->
+        <section id="step-success" class="step-hidden flex flex-col items-center justify-center space-y-8 text-center animate-in zoom-in duration-1000 py-10">
+            <div class="w-20 h-20 rounded-full border-2 gold-border flex items-center justify-center animate-pulse"><i data-lucide="check" class="gold-text w-10 h-10"></i></div>
+            
+            <div class="receipt-paper w-full max-w-sm text-left font-sans">
+                <div class="text-center border-b border-dashed border-gray-300 pb-4 mb-4 font-serif">
+                    <h3 class="text-xl font-bold uppercase tracking-widest text-gray-800 text-center">Estate No. 4 Nota</h3>
+                    <p id="receipt-id" class="text-[9px] font-mono mt-4 text-gray-500 uppercase text-center">ORDER ID: --</p>
+                </div>
+                
+                <div class="space-y-2 text-[11px] mb-6 text-gray-700">
+                    <div class="flex justify-between"><span>Pelanggan:</span> <span id="rec-name" class="font-bold uppercase">--</span></div>
+                    <div class="flex justify-between"><span>Metode:</span> <span id="rec-method" class="uppercase">--</span></div>
+                </div>
+
+                <div id="receipt-items" class="border-y border-dashed border-gray-300 py-4 space-y-2 mb-4 text-[11px] text-gray-700 italic font-light"></div>
+
+                <div class="flex justify-between text-lg font-bold text-gray-900 pt-2">
+                    <span>JUMLAH:</span>
+                    <span id="rec-total" class="font-mono text-gray-900">Rp 0</span>
+                </div>
+
+                <div class="mt-8 text-center border-t border-dashed border-gray-300 pt-4 opacity-50 text-gray-400">
+                    <p class="text-[9px] uppercase tracking-widest italic">Tersimpan dalam Riwayat Pesanan</p>
+                </div>
+            </div>
+
+            <a href="index.html" class="text-xs tracking-[0.4em] uppercase border-b gold-border pt-8 transition-all hover:opacity-50 no-underline">Kembali ke Beranda</a>
+        </section>
+
+    </main>
+
+    <script>
+        // --- KONFIGURASI INTEGRASI ---
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1480709124772597882/w4gpt5WOkrlKPwHoTMeK0ticgMGc9Kn-qvvnU8gbF89neVib8Vj9qb41A7tDYOmsyPma";
+        const EXCEL_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzc6YPKdgb-pHjNyrUaBbPq9vQ2xKeZhn2b5nxzQnTkh9BLYjweeb5TUCTBQX8Dd0Y9lg/exec";
+        const API_URL = "api.php"; // File perantara MySQL Anda
+
+        let state = { name: '', phone: '', method: '', cart: [], payment: '', orderId: '' };
+
+        // 1. Navigasi Antar Langkah
+        function goToStep(n) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('step-hidden'));
+            document.getElementById(`step-${n}`).classList.remove('step-hidden');
+            window.scrollTo(0,0);
+        }
+
+        // 2. Pilih Metode Ambil
+        window.selectMethod = (m) => {
+            state.method = m;
+            document.getElementById('btn-takeaway').className = m === 'takeaway' ? 'py-4 border gold-border rounded-lg btn-active' : 'py-4 border gold-border rounded-lg';
+            document.getElementById('btn-preorder').className = m === 'preorder' ? 'py-4 border gold-border rounded-lg btn-active' : 'py-4 border gold-border rounded-lg';
+            document.getElementById('preorder-fields').classList.toggle('hidden', m !== 'preorder');
+        };
+
+        // 3. Validasi Langkah 1
+        window.validateStep1 = () => {
+            state.name = document.getElementById('cust-name').value;
+            state.phone = document.getElementById('cust-phone').value;
+            if (!state.name || !state.phone || !state.method) return alert("Silakan lengkapi data pemesan.");
+            goToStep(2);
+        };
+
+        // 4. Manajemen Keranjang
+        window.addToCart = (name, price) => {
+            state.cart.push({ name, price });
+            document.getElementById('cart-count').innerText = state.cart.length;
+            updateCartUI();
+            // Alert sederhana pengganti modal
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-10 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-2 rounded-full text-xs font-bold uppercase z-[200]";
+            toast.innerText = `${name} ditambahkan!`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        };
+
+        function updateCartUI() {
+            const list = document.getElementById('cart-list');
+            let total = 0;
+            list.innerHTML = state.cart.map((item, i) => {
+                total += item.price;
+                return `<div class="flex justify-between items-center py-1 border-b border-white/5">
+                    <span>${item.name}</span><div class="flex items-center space-x-4">
+                        <span class="text-xs opacity-60">Rp ${item.price.toLocaleString()}</span>
+                        <button onclick="removeItem(${i})" class="text-red-500/40 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div></div>`;
+            }).join('');
+            document.getElementById('total-price-display').innerText = `Rp ${total.toLocaleString()}`;
+            lucide.createIcons();
+        }
+
+        window.removeItem = (i) => { state.cart.splice(i, 1); document.getElementById('cart-count').innerText = state.cart.length; updateCartUI(); };
+
+        // 5. Pembayaran
+        window.selectPayment = (p) => { 
+            state.payment = p; 
+            document.getElementById('pay-cash').classList.toggle('btn-active', p === 'cash');
+            document.getElementById('pay-qris').classList.toggle('btn-active', p === 'qris');
+        };
+
+        // 6. PROSES FINAL PESANAN (Kirim ke MySQL, Discord, dan Excel)
+        async function processOrder() {
+            if (state.cart.length === 0) return alert("Keranjang belanja kosong.");
+            if (!state.payment) return alert("Pilih metode pembayaran.");
+            
+            const btn = document.getElementById('btn-final-order');
+            btn.disabled = true;
+            btn.innerText = "Mengirim...";
+            
+            state.orderId = 'EST-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            const totalPrice = state.cart.reduce((a, b) => a + b.price, 0);
+
+            try {
+                // A. KIRIM KE MYSQL (Melalui api.php)
+                const mySqlTask = fetch(`${API_URL}?action=save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({...state, totalPrice})
+                });
+
+                // B. KIRIM KE DISCORD
+                const itemsList = state.cart.map(i => `- ${i.name}`).join('\n');
+                const discordTask = fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "🔔 Pesanan Baru (MySQL System)",
+                            color: 12951641,
+                            fields: [
+                                { name: "ID Pesanan", value: state.orderId, inline: true },
+                                { name: "Pelanggan", value: state.name, inline: true },
+                                { name: "Total", value: "Rp " + totalPrice.toLocaleString() }
+                            ],
+                            timestamp: new Date().toISOString()
+                        }]
+                    })
+                });
+
+                // C. KIRIM KE EXCEL (Google Sheets)
+                const formData = new URLSearchParams();
+                formData.append('orderId', state.orderId);
+                formData.append('namaPelanggan', state.name);
+                formData.append('namaPesanan', state.cart.map(i => i.name).join(', '));
+                formData.append('qty', state.cart.length);
+                formData.append('totalBayar', totalPrice);
+                formData.append('metodePembayaran', state.payment.toUpperCase());
+                formData.append('metodeAmbil', state.method.toUpperCase());
+                formData.append('kontak', state.phone);
+                
+                const excelTask = fetch(EXCEL_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData });
+
+                // Tunggu semua proses selesai
+                await Promise.all([mySqlTask, discordTask, excelTask]);
+
+                // Update Tampilan Nota Sukses
+                document.getElementById('receipt-id').innerText = `ORDER ID: ${state.orderId}`;
+                document.getElementById('rec-name').innerText = state.name;
+                document.getElementById('rec-method').innerText = state.method;
+                const itemContainer = document.getElementById('receipt-items');
+                itemContainer.innerHTML = state.cart.map(i => `<div class="flex justify-between"><span>${i.name}</span><span>Rp ${i.price.toLocaleString()}</span></div>`).join('');
+                document.getElementById('rec-total').innerText = "Rp " + totalPrice.toLocaleString();
+                
+                goToStep('success');
+
+            } catch (e) {
+                console.error(e);
+                alert("Terjadi kesalahan teknis. Pastikan api.php sudah diunggah dan database terhubung.");
+                btn.disabled = false;
+                btn.innerText = "Kirim Pesanan";
+            }
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>

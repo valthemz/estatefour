@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Estate No. 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #080808; color: #e5e5e5; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-text { color: #c5a059; }
+        .gold-border { border-color: rgba(197, 160, 89, 0.2); }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(197, 160, 89, 0.1); }
+        
+        /* Gaya Nota/Resit Digital */
+        .receipt-admin {
+            background: #fefefe;
+            color: #333;
+            padding: 25px;
+            border-radius: 2px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            font-size: 12px;
+            position: relative;
+        }
+        .receipt-admin::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(-45deg, transparent 5px, #fefefe 5px), linear-gradient(45deg, transparent 5px, #fefefe 5px);
+            background-size: 10px 10px;
+        }
+        .step-hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Layar Login Admin -->
+    <div id="login-screen" class="fixed inset-0 z-[200] bg-black flex items-center justify-center p-6 font-sans">
+        <div class="glass-card p-10 rounded-2xl w-full max-w-sm text-center space-y-6 shadow-2xl">
+            <h2 class="text-3xl font-serif gold-text italic">Admin Access</h2>
+            <p class="text-xs opacity-50 uppercase tracking-widest text-white">Masukkan PIN: 1234</p>
+            <input type="password" id="admin-pin" placeholder="••••" class="text-center bg-neutral-900 border gold-border p-4 w-full rounded outline-none text-2xl tracking-[0.5em] text-white">
+            <button id="login-btn" onclick="handleLogin()" class="w-full bg-[#c5a059] text-black font-bold py-4 rounded hover:bg-[#d4b47a] transition-all uppercase tracking-widest">Masuk Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Konten Dashboard -->
+    <div id="dashboard" class="step-hidden min-h-screen">
+        <nav class="p-6 border-b gold-border flex justify-between items-center bg-black/50 sticky top-0 z-50 backdrop-blur-md">
+            <span class="text-xl font-serif gold-text italic tracking-tighter">Estate No. 4 MySQL Admin</span>
+            <div class="flex items-center space-x-4">
+                <button onclick="loadOrders()" class="bg-emerald-600 text-white px-4 py-2 rounded text-[10px] uppercase font-bold tracking-widest hover:bg-emerald-500 transition-colors">Refresh Data</button>
+                <button onclick="location.reload()" class="text-white/40 hover:text-white transition-colors"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto p-8 space-y-12">
+            <!-- Antrean Nota Pesanan Aktif -->
+            <section class="space-y-6">
+                <h3 class="text-2xl font-serif gold-text border-b gold-border pb-2 flex items-center font-light">
+                    <i data-lucide="list-ordered" class="mr-3 w-6 h-6"></i> Pesanan Masuk (Aktif)
+                </h3>
+                <div id="order-queue" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="col-span-full py-20 text-center opacity-30 italic font-serif">Memuat data dari MySQL...</div>
+                </div>
+            </section>
+
+            <!-- Riwayat Transaksi -->
+            <section class="space-y-6">
+                <h3 class="text-2xl font-serif gold-text border-b gold-border pb-2 flex items-center opacity-50 font-light">
+                    <i data-lucide="history" class="mr-3 w-6 h-6"></i> Riwayat Transaksi Selesai
+                </h3>
+                <div class="overflow-x-auto glass-card rounded-2xl border gold-border">
+                    <table class="w-full text-left text-sm font-sans">
+                        <thead class="text-[10px] uppercase opacity-40 border-b border-white/5 bg-white/5 font-bold">
+                            <tr>
+                                <th class="p-4">ID Pesanan</th>
+                                <th class="p-4">Nama Pelanggan</th>
+                                <th class="p-4">Metode</th>
+                                <th class="p-4 text-right">Total</th>
+                                <th class="p-4 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-list">
+                            <!-- Data Riwayat Selesai -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = "api.php"; // File backend MySQL Anda
+
+        // 1. Fungsi Login
+        function handleLogin() {
+            const pin = document.getElementById('admin-pin').value;
+            if(pin === "1234") {
+                document.getElementById('login-screen').classList.add('step-hidden');
+                document.getElementById('dashboard').classList.remove('step-hidden');
+                loadOrders();
+            } else {
+                alert("PIN Salah!");
+                document.getElementById('admin-pin').value = "";
+            }
+        }
+
+        // 2. Load Data dari MySQL
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}?action=list`);
+                const orders = await response.json();
+                
+                const queue = document.getElementById('order-queue');
+                const history = document.getElementById('history-list');
+                
+                queue.innerHTML = '';
+                history.innerHTML = '';
+
+                const activeOrders = orders.filter(o => o.status !== 'completed');
+                const doneOrders = orders.filter(o => o.status === 'completed');
+
+                if (activeOrders.length === 0) {
+                    queue.innerHTML = '<div class="col-span-full py-20 text-center opacity-30 italic">Belum ada pesanan masuk...</div>';
+                }
+
+                activeOrders.forEach(order => {
+                    const isReady = order.status === 'ready';
+                    const items = JSON.parse(order.items_json);
+                    
+                    queue.innerHTML += `
+                        <div class="space-y-4 animate-in fade-in slide-in-from-bottom-4">
+                            <div class="receipt-admin text-gray-800 font-sans">
+                                <div class="text-center border-b border-dashed border-gray-300 pb-3 mb-4 font-serif">
+                                    <h4 class="font-bold uppercase tracking-widest text-base">Estate No. 4 Nota</h4>
+                                    <div class="text-[8px] font-mono mt-1 opacity-50 uppercase">ID: ${order.order_id}</div>
+                                </div>
+                                <div class="space-y-1.5 mb-4 text-[11px]">
+                                    <div class="flex justify-between font-bold"><span>Pelanggan:</span> <span class="uppercase">${order.customer_name}</span></div>
+                                    <div class="flex justify-between"><span>Metode:</span> <span class="uppercase">${order.method}</span></div>
+                                    <div class="flex justify-between"><span>Pembayaran:</span> <span class="text-emerald-700 font-bold uppercase">${order.payment_method}</span></div>
+                                    <div class="flex justify-between"><span>Whatsapp:</span> <span>${order.whatsapp || '-'}</span></div>
+                                </div>
+                                <div class="border-y border-dashed border-gray-300 py-3 space-y-2 mb-4">
+                                    ${items.map(i => `
+                                        <div class="flex justify-between italic text-[11px]">
+                                            <span>${i.name}</span> 
+                                            <span>Rp ${Number(i.price).toLocaleString()}</span>
+                                        </div>`).join('')}
+                                </div>
+                                <div class="flex justify-between font-bold text-sm">
+                                    <span>TOTAL:</span> 
+                                    <span>Rp ${Number(order.total_price).toLocaleString()}</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                ${!isReady ? 
+                                    `<button onclick="updateStatus(${order.id}, 'ready')" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded text-[10px] uppercase tracking-widest shadow-lg hover:bg-emerald-500 transition-all">Minuman Siap</button>` :
+                                    `<button onclick="updateStatus(${order.id}, 'completed')" class="flex-1 bg-white text-black font-bold py-3 rounded text-[10px] uppercase tracking-widest shadow-lg border hover:bg-neutral-100 transition-all">Selesai/Diambil</button>`
+                                }
+                                <button onclick="deleteOrder(${order.id})" class="px-4 border border-red-500/30 text-red-500 rounded hover:bg-red-500/10 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>`;
+                });
+
+                doneOrders.forEach(order => {
+                    history.innerHTML += `
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-4 font-mono text-[10px] opacity-60 uppercase">${order.order_id}</td>
+                            <td class="p-4 font-bold text-xs">${order.customer_name}</td>
+                            <td class="p-4 text-xs opacity-60 uppercase font-bold">${order.method}</td>
+                            <td class="p-4 gold-text font-bold text-xs text-right">Rp ${Number(order.total_price).toLocaleString()}</td>
+                            <td class="p-4 text-right">
+                                <button onclick="deleteOrder(${order.id})" class="text-red-500/30 hover:text-red-500 transition-colors">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>`;
+                });
+
+                lucide.createIcons();
+            } catch (e) {
+                console.error("Gagal memuat data MySQL:", e);
+                alert("Kesalahan koneksi ke api.php.");
+            }
+        }
+
+        // 3. Update Status Pesanan (Ready / Completed)
+        async function updateStatus(id, status) {
+            try {
+                const response = await fetch(`${API_URL}?action=update_status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, status })
+                });
+                const result = await response.json();
+                if (result.success) loadOrders();
+            } catch (e) {
+                alert("Gagal memperbarui status.");
+            }
+        }
+
+        // 4. Hapus Pesanan
+        async function deleteOrder(id) {
+            if (confirm("Hapus pesanan ini secara permanen dari database?")) {
+                try {
+                    const response = await fetch(`${API_URL}?action=delete&id=${id}`);
+                    const result = await response.json();
+                    if (result.success) loadOrders();
+                } catch (e) {
+                    alert("Gagal menghapus data.");
+                }
+            }
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
